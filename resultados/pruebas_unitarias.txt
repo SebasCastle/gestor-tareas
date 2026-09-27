@@ -1,0 +1,18 @@
+test_devuelve_la_misma_instancia (test_gestor.TestConfiguracionSingleton.test_devuelve_la_misma_instancia) ... ok
+test_el_modo_debug_se_comparte (test_gestor.TestConfiguracionSingleton.test_el_modo_debug_se_comparte) ... ok
+test_reiniciar_crea_una_instancia_nueva (test_gestor.TestConfiguracionSingleton.test_reiniciar_crea_una_instancia_nueva) ... ok
+test_agregar_tarea (test_gestor.TestGestorTareas.test_agregar_tarea) ... ok
+test_agregar_tarea_vacia_lanza_error (test_gestor.TestGestorTareas.test_agregar_tarea_vacia_lanza_error) ... ok
+test_agregar_varias_tareas_asigna_ids_consecutivos (test_gestor.TestGestorTareas.test_agregar_varias_tareas_asigna_ids_consecutivos) ... ok
+test_cargar_archivo_danado_lanza_error (test_gestor.TestGestorTareas.test_cargar_archivo_danado_lanza_error) ... ok
+test_cargar_archivo_inexistente_inicia_vacio (test_gestor.TestGestorTareas.test_cargar_archivo_inexistente_inicia_vacio) ... ok
+test_completar_tarea (test_gestor.TestGestorTareas.test_completar_tarea) ... ok
+test_completar_tarea_inexistente (test_gestor.TestGestorTareas.test_completar_tarea_inexistente) ... ok
+test_completar_tarea_ya_completada (test_gestor.TestGestorTareas.test_completar_tarea_ya_completada) ... ok
+test_guardar_y_cargar_conserva_tareas (test_gestor.TestGestorTareas.test_guardar_y_cargar_conserva_tareas) ... ok
+test_listar_no_expone_la_lista_interna (test_gestor.TestGestorTareas.test_listar_no_expone_la_lista_interna) ... ok
+
+----------------------------------------------------------------------
+Ran 13 tests in 0.015s
+
+OK

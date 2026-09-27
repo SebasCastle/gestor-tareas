@@ -1,0 +1,89 @@
+=== Sesión 1: alta y listado. Al salir se guarda data/tareas.json ===
+=== Gestor de Tareas ===
+
+1. Agregar tarea
+2. Listar tareas
+3. Marcar tarea como completada
+4. Salir
+Elige una opción: 1
+Título de la tarea: Leer el documento de apoyo
+Tarea 1 agregada.
+
+1. Agregar tarea
+2. Listar tareas
+3. Marcar tarea como completada
+4. Salir
+Elige una opción: 1
+Título de la tarea: Implementar persistencia JSON
+Tarea 2 agregada.
+
+1. Agregar tarea
+2. Listar tareas
+3. Marcar tarea como completada
+4. Salir
+Elige una opción: 2
+ID    Estado        Título
+1     [ ]           Leer el documento de apoyo
+2     [ ]           Implementar persistencia JSON
+
+1. Agregar tarea
+2. Listar tareas
+3. Marcar tarea como completada
+4. Salir
+Elige una opción: 4
+Hasta luego.
+Cambios guardados.
+
+=== Sesión 2: carga el JSON, completa la tarea 1 y vuelve a guardar ===
+=== Gestor de Tareas ===
+
+1. Agregar tarea
+2. Listar tareas
+3. Marcar tarea como completada
+4. Salir
+Elige una opción: 2
+ID    Estado        Título
+1     [ ]           Leer el documento de apoyo
+2     [ ]           Implementar persistencia JSON
+
+1. Agregar tarea
+2. Listar tareas
+3. Marcar tarea como completada
+4. Salir
+Elige una opción: 3
+ID de la tarea: 1
+Tarea 1 marcada como completada.
+
+1. Agregar tarea
+2. Listar tareas
+3. Marcar tarea como completada
+4. Salir
+Elige una opción: 2
+ID    Estado        Título
+1     [x]           Leer el documento de apoyo
+2     [ ]           Implementar persistencia JSON
+
+1. Agregar tarea
+2. Listar tareas
+3. Marcar tarea como completada
+4. Salir
+Elige una opción: 4
+Hasta luego.
+Cambios guardados.
+
+=== Contenido de data/tareas.json después de la segunda sesión ===
+{
+  "siguiente_id": 3,
+  "tareas": [
+    {
+      "id": 1,
+      "titulo": "Leer el documento de apoyo",
+      "completada": true
+    },
+    {
+      "id": 2,
+      "titulo": "Implementar persistencia JSON",
+      "completada": false
+    }
+  ]
+}
