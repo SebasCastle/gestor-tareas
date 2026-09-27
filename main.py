@@ -10,16 +10,23 @@ from gestor_tareas.tarea import Tarea
 
 
 def main() -> None:
-    """Inicia el menú de la aplicación."""
+    """Carga las tareas guardadas, muestra el menú y guarda al salir."""
     config = Configuracion.obtener()
-    gestor = GestorTareas()
     _configurar_salida()
+    try:
+        gestor = GestorTareas()
+    except ValueError as error:
+        print(error)
+        return
     print(f"=== {config.nombre_app} ===")
-    config.registrar("Aplicación iniciada")
+    config.registrar(f"Archivo de datos: {config.archivo_datos}")
     try:
         _menu(gestor)
     except KeyboardInterrupt:
         print("\nSaliendo.")
+    finally:
+        gestor.guardar()
+        print("Cambios guardados.")
 
 
 def _menu(gestor: GestorTareas) -> None:
@@ -34,9 +41,10 @@ def _menu(gestor: GestorTareas) -> None:
         print("2. Listar tareas")
         print("3. Marcar tarea como completada")
         print("4. Salir")
-        opcion = input("Elige una opción: ").strip()
-        if opcion == "4":
-            print("Hasta luego.")
+        opcion = _leer("Elige una opción: ")
+        if opcion is None or opcion == "4":
+            if opcion == "4":
+                print("Hasta luego.")
             return
         accion = opciones.get(opcion)
         if accion is None:
@@ -46,7 +54,9 @@ def _menu(gestor: GestorTareas) -> None:
 
 
 def _agregar(gestor: GestorTareas) -> None:
-    titulo = input("Título de la tarea: ")
+    titulo = _leer("Título de la tarea: ")
+    if titulo is None:
+        return
     try:
         tarea = gestor.agregar_tarea(titulo)
     except ValueError as error:
@@ -69,7 +79,9 @@ def _completar(gestor: GestorTareas) -> None:
     if not gestor.listar_tareas():
         print("No hay tareas para completar.")
         return
-    entrada = input("ID de la tarea: ").strip()
+    entrada = _leer("ID de la tarea: ")
+    if entrada is None:
+        return
     if not entrada.isdigit():
         print("El ID debe ser un número entero.")
         return
@@ -79,6 +91,18 @@ def _completar(gestor: GestorTareas) -> None:
         print(error)
         return
     print(f"Tarea {tarea.id} marcada como completada.")
+
+
+def _leer(mensaje: str) -> str | None:
+    """Lee una línea. Si la entrada no es una terminal, la repite en pantalla."""
+    try:
+        valor = input(mensaje)
+    except EOFError:
+        print()
+        return None
+    if not sys.stdin.isatty():
+        print(valor)
+    return valor.strip()
 
 
 def _marca(tarea: Tarea) -> str:

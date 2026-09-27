@@ -1,8 +1,10 @@
-"""Pruebas unitarias de agregar, listar y completar tareas."""
+"""Pruebas unitarias de agregar, listar, completar y persistir tareas."""
 
 from __future__ import annotations
 
+import tempfile
 import unittest
+from pathlib import Path
 
 from gestor_tareas.configuracion import Configuracion
 from gestor_tareas.gestor import GestorTareas
@@ -13,6 +15,10 @@ class TestGestorTareas(unittest.TestCase):
 
     def setUp(self) -> None:
         Configuracion.reiniciar()
+        self._tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._tmp.cleanup)
+        config = Configuracion.obtener()
+        config.archivo_datos = Path(self._tmp.name) / "tareas.json"
         self.gestor = GestorTareas()
 
     def test_agregar_tarea(self) -> None:
@@ -67,6 +73,36 @@ class TestGestorTareas(unittest.TestCase):
         copia.clear()
         self.assertEqual(len(self.gestor.listar_tareas()), 1)
 
+    def test_guardar_y_cargar_conserva_tareas(self) -> None:
+        self.gestor.agregar_tarea("Persistir")
+        completada = self.gestor.agregar_tarea("Cerrar sesión")
+        self.gestor.completar_tarea(completada.id)
+        self.gestor.guardar()
+
+        Configuracion.reiniciar()
+        config = Configuracion.obtener()
+        config.archivo_datos = Path(self._tmp.name) / "tareas.json"
+        restaurado = GestorTareas()
+
+        tareas = restaurado.listar_tareas()
+        self.assertEqual(
+            [tarea.titulo for tarea in tareas],
+            ["Persistir", "Cerrar sesión"],
+        )
+        self.assertFalse(tareas[0].completada)
+        self.assertTrue(tareas[1].completada)
+        nueva = restaurado.agregar_tarea("Continuar")
+        self.assertEqual(nueva.id, 3)
+
+    def test_cargar_archivo_inexistente_inicia_vacio(self) -> None:
+        self.assertEqual(self.gestor.listar_tareas(), [])
+
+    def test_cargar_archivo_danado_lanza_error(self) -> None:
+        ruta = Path(self._tmp.name) / "tareas.json"
+        ruta.write_text("{ esto no es json", encoding="utf-8")
+        with self.assertRaises(ValueError):
+            self.gestor.cargar()
+
 
 class TestConfiguracionSingleton(unittest.TestCase):
     """Verifica que la configuración global sea una única instancia."""
@@ -84,6 +120,12 @@ class TestConfiguracionSingleton(unittest.TestCase):
         Configuracion.reiniciar()
         segunda = Configuracion.obtener()
         self.assertIsNot(primera, segunda)
+
+    def test_el_modo_debug_se_comparte(self) -> None:
+        primera = Configuracion.obtener()
+        primera.modo_debug = True
+        segunda = Configuracion.obtener()
+        self.assertTrue(segunda.modo_debug)
 
 
 if __name__ == "__main__":
